@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI剪辑工具库 — 精筛实用指南</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#faf3e0;--card:#ffffff;--card-hover:#fdf8ed;--accent:#6c5ce7;--accent2:#00a8a0;--text:#2d2a24;--muted:#999082;--border:#e6ddd0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+
+/* 导航 */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 40px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(20px);background:rgba(250,243,224,0.85);border-bottom:1px solid var(--border)}
+.logo{font-size:20px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo span{color:var(--text);-webkit-text-fill-color:var(--text)}
+nav .stats{font-size:13px;color:var(--muted)}
+
+/* Hero */
+.hero{position:relative;z-index:1;text-align:center;padding:110px 20px 50px}
+.hero h1{font-size:clamp(28px,5vw,52px);font-weight:900;background:linear-gradient(135deg,#2d2a24,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{margin-top:12px;font-size:16px;color:var(--muted);max-width:540px;margin-inline:auto}
+.search-box{margin-top:24px;max-width:440px;margin-inline:auto;position:relative}
+.search-box input{width:100%;padding:12px 16px 12px 42px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:15px;outline:none;transition:0.3s}
+.search-box input:focus{border-color:var(--accent);box-shadow:0 0 20px rgba(108,92,231,0.08)}
+.search-box .icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px}
+
+/* Tabs */
+.tabs{position:relative;z-index:1;display:flex;gap:6px;padding:0 20px;max-width:1100px;margin:24px auto 0;flex-wrap:wrap;justify-content:center}
+.tab{padding:7px 18px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:13px;transition:0.2s}
+.tab:hover{border-color:var(--accent);color:var(--text)}
+.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* Grid */
+.grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:960px;margin:24px auto 60px;padding:0 20px}
+
+/* Card */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;transition:0.25s;cursor:default}
+.card:hover{background:var(--card-hover);border-color:rgba(108,92,231,0.2);transform:translateY(-3px);box-shadow:0 8px 25px rgba(108,92,231,0.06)}
+.card .cat{display:inline-block;font-size:11px;padding:2px 10px;border-radius:4px;background:rgba(108,92,231,0.1);color:var(--accent);margin-bottom:8px}
+.card h3{font-size:17px;font-weight:700;margin-bottom:6px}
+.card p{font-size:13px;color:#aaa;line-height:1.6;margin-bottom:10px}
+.card .meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.card .effort{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:2px 8px;border-radius:4px;font-weight:500}
+.card .effort.e1{background:rgba(34,197,94,0.12);color:#22c55e}
+.card .effort.e2{background:rgba(234,179,8,0.12);color:#eab308}
+.card .effort.e3{background:rgba(239,68,68,0.12);color:#ef4444}
+.card .plat{font-size:12px;color:var(--muted)}
+.card .link{display:inline-block;padding:5px 14px;border-radius:6px;background:var(--accent);color:#fff;text-decoration:none;font-size:12px;transition:0.2s}
+.card .link:hover{background:#5a4bd1}
+
+/* Footer */
+footer{position:relative;z-index:1;text-align:center;padding:24px;color:var(--muted);font-size:12px;border-top:1px solid var(--border)}
+
+.empty{grid-column:1/-1;text-align:center;padding:60px;color:var(--muted)}
+
+@media(max-width:640px){
+nav{padding:12px 16px}
+.grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="logo">AI剪辑<span>工具库</span></div>
+<div class="stats" id="totalCount">加载中...</div>
+</nav>
+
+<section class="hero">
+<h1>最好用的AI剪辑工具库</h1>
+<p>只收录真正好用的 AI 影音剪辑工具，不做大而全，只做精而准</p>
+<div class="search-box">
+<span class="icon">🔍</span>
+<input type="text" id="search" placeholder="搜索工具名称、场景、平台..." oninput="filterTools()">
+</div>
+</section>
+
+<div class="tabs" id="tabs"></div>
+<div class="grid" id="grid"></div>
+
+<footer>AI剪辑工具库 · 精筛实用导向 · 数据维护在 <code>tools</code> 数组</footer>
+
+<script>
+const tools = [
+// ─── AI视频生成 ───
+{cat:"AI视频生成",name:"Sora",desc:"OpenAI 出品，文生视频画质和连贯性业界顶尖，支持图生视频和视频编辑",effort:"e2",platform:"Web",url:"https://sora.com/"},
+{cat:"AI视频生成",name:"Runway Gen-3",desc:"功能最全的AI视频平台，文生视频、图生视频、视频修复、背景移除一应俱全",effort:"e2",platform:"Web",url:"https://runwayml.com/"},
+{cat:"AI视频生成",name:"Pika 2.0",desc:"操作简单的文生视频/图生视频工具，效果好，上手快",effort:"e1",platform:"Web",url:"https://pika.art/"},
+{cat:"AI视频生成",name:"可灵 Kling",desc:"快手出品，国产视频生成最强，画质和一致性优秀，国内直接可用",effort:"e1",platform:"Web",url:"https://kling.kuaishou.com/"},
+{cat:"AI视频生成",name:"Vidu",desc:"清华系 AI 视频生成，国内可用，支持文生视频和图生视频",effort:"e2",platform:"Web",url:"https://www.vidu.cn/"},
+
+// ─── AI智能剪辑 ───
+{cat:"AI智能剪辑",name:"剪映 AI",desc:"集成 AI 剪口播、图文成片、智能字幕、AI 数字人，免费且功能全面",effort:"e1",platform:"Win/Mac/手机",url:"https://www.capcut.cn/"},
+{cat:"AI智能剪辑",name:"Descript",desc:"像编辑文档一样编辑视频，AI 去口头禅、自动填充停顿、声音克隆",effort:"e2",platform:"Mac/Win",url:"https://www.descript.com/"},
+{cat:"AI智能剪辑",name:"Opus Clip",desc:"长视频自动切为多条短视频爆款片段，AI 选精彩部分，适合内容分发",effort:"e1",platform:"Web",url:"https://www.opus.pro/"},
+{cat:"AI智能剪辑",name:"Recut",desc:"自动检测并移除视频中的静音、废话和冗余片段，一键精简",effort:"e1",platform:"Win/Mac",url:"https://www.recut.app/"},
+{cat:"AI智能剪辑",name:"AutoCut",desc:"基于文本选择保留片段，自动剪辑，适合采访/播客类视频",effort:"e3",platform:"Win/Mac",url:"https://github.com/antfu/autocut"},
+
+// ─── AI画质修复 ───
+{cat:"AI画质修复",name:"Topaz Video AI",desc:"AI 视频修复之王，去噪、去隔行、放大、补帧效果行业顶尖",effort:"e2",platform:"Win/Mac",url:"https://www.topazlabs.com/topaz-video-ai"},
+{cat:"AI画质修复",name:"HitPaw Video Enhancer",desc:"易上手的 AI 画质增强工具，去噪放大补帧一键操作",effort:"e1",platform:"Win/Mac",url:"https://www.hitpaw.com/video-enhancer.html"},
+{cat:"AI画质修复",name:"DVDFab Enlarger AI",desc:"AI 视频放大工具，模型针对不同视频类型优化",effort:"e2",platform:"Win/Mac",url:"https://www.dvdfab.cn/ai-video-enlarger.htm"},
+
+// ─── AI语音配音 ───
+{cat:"AI语音配音",name:"ElevenLabs",desc:"最强 AI 语音平台，声音克隆、多语种配音、情感表达业界顶尖",effort:"e1",platform:"Web",url:"https://elevenlabs.io/"},
+{cat:"AI语音配音",name:"Fish Audio",desc:"国产 AI 语音克隆工具，效果好，支持中英文和多种音色",effort:"e1",platform:"Web",url:"https://fish.audio/"},
+{cat:"AI语音配音",name:"剪映 AI 配音",desc:"免费内置多种 AI 声音，支持变速和情感调节，打开即用",effort:"e1",platform:"Win/Mac/手机",url:"https://www.capcut.cn/"},
+{cat:"AI语音配音",name:"Edge TTS",desc:"微软免费 TTS 引擎，API 调用方便，支持多种语言和语音",effort:"e3",platform:"Web/API",url:"https://speech.microsoft.com/"},
+
+// ─── AI数字人 ───
+{cat:"AI数字人",name:"HeyGen",desc:"AI 数字人口播视频生成，支持多语言、自定义形象、PPT 讲解",effort:"e2",platform:"Web",url:"https://www.heygen.com/"},
+{cat:"AI数字人",name:"Virbo",desc:"万兴出品，输入文字即可生成真人出镜口播视频，国内用户友好",effort:"e1",platform:"Web/Win/Mac",url:"https://virbo.wondershare.com/"},
+{cat:"AI数字人",name:"D-ID",desc:"AI 数字人交互平台，可生成会说话的头像，创意玩法多样",effort:"e2",platform:"Web",url:"https://www.d-id.com/"},
+
+// ─── AI字幕翻译 ───
+{cat:"AI字幕翻译",name:"Rask AI",desc:"AI 视频翻译工具，保留原声并翻译为多种语言，支持口型同步",effort:"e1",platform:"Web",url:"https://www.rask.ai/"},
+{cat:"AI字幕翻译",name:"Veed.io",desc:"在线视频编辑平台，自动字幕生成准确率高，支持翻译和导出",effort:"e1",platform:"Web",url:"https://www.veed.io/"},
+{cat:"AI字幕翻译",name:"剪映 AI 字幕",desc:"免费精准的 AI 自动字幕，支持多语种识别，一键添加",effort:"e1",platform:"Win/Mac/手机",url:"https://www.capcut.cn/"},
+
+// ─── AI音频工具 ───
+{cat:"AI音频工具",name:"Adobe Podcast AI",desc:"一键 AI 降噪和音频增强，网页版免费使用，效果惊人",effort:"e1",platform:"Web",url:"https://podcast.adobe.com/"},
+{cat:"AI音频工具",name:"iZotope RX",desc:"AI 音频修复王者，去噪、去混响、去齿音、去杂音效果最强",effort:"e2",platform:"Win/Mac",url:"https://www.izotope.com/en/products/rx.html"},
+{cat:"AI音频工具",name:"Auphonic",desc:"AI 音频后期智能处理，自动平衡响度和音色，播客必备",effort:"e1",platform:"Web",url:"https://auphonic.com/"},
+{cat:"AI音频工具",name:"Krisp",desc:"AI 实时降噪，录制和通话中去除背景噪音和回声",effort:"e1",platform:"Win/Mac",url:"https://krisp.ai/"},
+{cat:"AI音频工具",name:"AudioShake",desc:"AI 分离人声和乐器，分轨提取质量高，适合采样和混音",effort:"e1",platform:"Web",url:"https://www.audioshake.ai/"},
+
+// ─── 音频剪辑 ───
+{cat:"音频剪辑",name:"Adobe Audition",desc:"专业音频编辑软件，降噪修复混音效果器一应俱全，行业标准",effort:"e2",platform:"Win/Mac",url:"https://www.adobe.com/products/audition.html"},
+{cat:"音频剪辑",name:"Audacity",desc:"最流行的免费开源音频编辑软件，录音剪辑降噪导出全功能",effort:"e1",platform:"Win/Mac/Linux",url:"https://www.audacityteam.org/"},
+{cat:"音频剪辑",name:"Fairlight",desc:"集成在达芬奇中的专业音频编辑工具，最高支持 999 音轨，免费使用",effort:"e2",platform:"Win/Mac/Linux",url:"https://www.blackmagicdesign.com/products/davinciresolve"},
+{cat:"音频剪辑",name:"Logic Pro",desc:"Mac 平台专业音频工作站，音乐制作和音频编辑的行业标准",effort:"e3",platform:"Mac",url:"https://www.apple.com/logic-pro/"},
+];
+
+const categories = [...new Set(tools.map(t=>t.cat))];
+const effortMap = {e1:'🟢 打开即用',e2:'🟡 半小时上手',e3:'🔴 需要折腾'};
+
+function render(cat,keyword){
+const grid=document.getElementById('grid');
+let list=tools;
+if(cat!=='全部')list=list.filter(t=>t.cat===cat);
+if(keyword){const kw=keyword.toLowerCase();list=list.filter(t=>t.name.toLowerCase().includes(kw)||t.desc.toLowerCase().includes(kw)||t.platform.toLowerCase().includes(kw))}
+if(list.length===0){grid.innerHTML=`<div class="empty">没有找到匹配的工具</div>`;document.getElementById('totalCount').textContent='0 款工具';return}
+grid.innerHTML=list.map(t=>`<div class="card"><div class="cat">${t.cat}</div><h3>${t.name}</h3><p>${t.desc}</p><div class="meta"><span class="effort ${t.effort}">${effortMap[t.effort]}</span><span class="plat">${t.platform}</span></div><a class="link" href="${t.url}" target="_blank">访问官网 →</a></div>`).join('');
+document.getElementById('totalCount').textContent=`${list.length} 款工具`;
+}
+
+function filterTools(){const kw=document.getElementById('search').value;const active=document.querySelector('.tab.active');const cat=active?active.dataset.cat:'全部';render(cat,kw)}
+
+function init(){
+const tabs=document.getElementById('tabs');
+tabs.innerHTML=['全部',...categories].map(c=>`<button class="tab${c==='全部'?' active':''}" data-cat="${c}" onclick="switchTab(this)">${c}</button>`).join('');
+render('全部','');
+}
+
+function switchTab(el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');filterTools()}
+
+init();
+</script>
+</body>
+</html>
