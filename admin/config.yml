@@ -1,0 +1,30 @@
+backend:
+  name: github
+  repo: bonourup/ai-video-sound-tools
+  branch: main
+  base_url: https://ai-video-sound-tools.vercel.app
+  auth_endpoint: api/auth
+
+publish_mode: editorial_workflow
+media_folder: media
+
+collections:
+  - name: tools
+    label: 工具列表
+    description: 管理所有 AI 剪辑工具
+    files:
+      - name: toolsdata
+        label: 工具数据
+        file: tools.json
+        format: json
+        fields:
+          - label: 工具列表
+            name: tools
+            widget: list
+            fields:
+              - {label: 分类, name: cat, widget: string, hint: e.g. AI视频生成, AI智能剪辑, 音频剪辑}
+              - {label: 名称, name: name, widget: string}
+              - {label: 描述, name: desc, widget: text}
+              - {label: 上手难度, name: effort, widget: select, options: [e1, e2, e3]}
+              - {label: 平台, name: platform, widget: string, hint: e.g. Web, Win/Mac, Mac}
+              - {label: 官网链接, name: url, widget: string}

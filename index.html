@@ -78,60 +78,10 @@ nav{padding:12px 16px}
 <div class="tabs" id="tabs"></div>
 <div class="grid" id="grid"></div>
 
-<footer>AI剪辑工具库 · 精筛实用导向 · 数据维护在 <code>tools</code> 数组</footer>
+<footer>AI剪辑工具库 · 精筛实用导向 · 数据通过 CMS 动态更新</footer>
 
 <script>
-const tools = [
-// ─── AI视频生成 ───
-{cat:"AI视频生成",name:"Sora",desc:"OpenAI 出品，文生视频画质和连贯性业界顶尖，支持图生视频和视频编辑",effort:"e2",platform:"Web",url:"https://sora.com/"},
-{cat:"AI视频生成",name:"Runway Gen-3",desc:"功能最全的AI视频平台，文生视频、图生视频、视频修复、背景移除一应俱全",effort:"e2",platform:"Web",url:"https://runwayml.com/"},
-{cat:"AI视频生成",name:"Pika 2.0",desc:"操作简单的文生视频/图生视频工具，效果好，上手快",effort:"e1",platform:"Web",url:"https://pika.art/"},
-{cat:"AI视频生成",name:"可灵 Kling",desc:"快手出品，国产视频生成最强，画质和一致性优秀，国内直接可用",effort:"e1",platform:"Web",url:"https://kling.kuaishou.com/"},
-{cat:"AI视频生成",name:"Vidu",desc:"清华系 AI 视频生成，国内可用，支持文生视频和图生视频",effort:"e2",platform:"Web",url:"https://www.vidu.cn/"},
-
-// ─── AI智能剪辑 ───
-{cat:"AI智能剪辑",name:"剪映 AI",desc:"集成 AI 剪口播、图文成片、智能字幕、AI 数字人，免费且功能全面",effort:"e1",platform:"Win/Mac/手机",url:"https://www.capcut.cn/"},
-{cat:"AI智能剪辑",name:"Descript",desc:"像编辑文档一样编辑视频，AI 去口头禅、自动填充停顿、声音克隆",effort:"e2",platform:"Mac/Win",url:"https://www.descript.com/"},
-{cat:"AI智能剪辑",name:"Opus Clip",desc:"长视频自动切为多条短视频爆款片段，AI 选精彩部分，适合内容分发",effort:"e1",platform:"Web",url:"https://www.opus.pro/"},
-{cat:"AI智能剪辑",name:"Recut",desc:"自动检测并移除视频中的静音、废话和冗余片段，一键精简",effort:"e1",platform:"Win/Mac",url:"https://www.recut.app/"},
-{cat:"AI智能剪辑",name:"AutoCut",desc:"基于文本选择保留片段，自动剪辑，适合采访/播客类视频",effort:"e3",platform:"Win/Mac",url:"https://github.com/antfu/autocut"},
-
-// ─── AI画质修复 ───
-{cat:"AI画质修复",name:"Topaz Video AI",desc:"AI 视频修复之王，去噪、去隔行、放大、补帧效果行业顶尖",effort:"e2",platform:"Win/Mac",url:"https://www.topazlabs.com/topaz-video-ai"},
-{cat:"AI画质修复",name:"HitPaw Video Enhancer",desc:"易上手的 AI 画质增强工具，去噪放大补帧一键操作",effort:"e1",platform:"Win/Mac",url:"https://www.hitpaw.com/video-enhancer.html"},
-{cat:"AI画质修复",name:"DVDFab Enlarger AI",desc:"AI 视频放大工具，模型针对不同视频类型优化",effort:"e2",platform:"Win/Mac",url:"https://www.dvdfab.cn/ai-video-enlarger.htm"},
-
-// ─── AI语音配音 ───
-{cat:"AI语音配音",name:"ElevenLabs",desc:"最强 AI 语音平台，声音克隆、多语种配音、情感表达业界顶尖",effort:"e1",platform:"Web",url:"https://elevenlabs.io/"},
-{cat:"AI语音配音",name:"Fish Audio",desc:"国产 AI 语音克隆工具，效果好，支持中英文和多种音色",effort:"e1",platform:"Web",url:"https://fish.audio/"},
-{cat:"AI语音配音",name:"剪映 AI 配音",desc:"免费内置多种 AI 声音，支持变速和情感调节，打开即用",effort:"e1",platform:"Win/Mac/手机",url:"https://www.capcut.cn/"},
-{cat:"AI语音配音",name:"Edge TTS",desc:"微软免费 TTS 引擎，API 调用方便，支持多种语言和语音",effort:"e3",platform:"Web/API",url:"https://speech.microsoft.com/"},
-
-// ─── AI数字人 ───
-{cat:"AI数字人",name:"HeyGen",desc:"AI 数字人口播视频生成，支持多语言、自定义形象、PPT 讲解",effort:"e2",platform:"Web",url:"https://www.heygen.com/"},
-{cat:"AI数字人",name:"Virbo",desc:"万兴出品，输入文字即可生成真人出镜口播视频，国内用户友好",effort:"e1",platform:"Web/Win/Mac",url:"https://virbo.wondershare.com/"},
-{cat:"AI数字人",name:"D-ID",desc:"AI 数字人交互平台，可生成会说话的头像，创意玩法多样",effort:"e2",platform:"Web",url:"https://www.d-id.com/"},
-
-// ─── AI字幕翻译 ───
-{cat:"AI字幕翻译",name:"Rask AI",desc:"AI 视频翻译工具，保留原声并翻译为多种语言，支持口型同步",effort:"e1",platform:"Web",url:"https://www.rask.ai/"},
-{cat:"AI字幕翻译",name:"Veed.io",desc:"在线视频编辑平台，自动字幕生成准确率高，支持翻译和导出",effort:"e1",platform:"Web",url:"https://www.veed.io/"},
-{cat:"AI字幕翻译",name:"剪映 AI 字幕",desc:"免费精准的 AI 自动字幕，支持多语种识别，一键添加",effort:"e1",platform:"Win/Mac/手机",url:"https://www.capcut.cn/"},
-
-// ─── AI音频工具 ───
-{cat:"AI音频工具",name:"Adobe Podcast AI",desc:"一键 AI 降噪和音频增强，网页版免费使用，效果惊人",effort:"e1",platform:"Web",url:"https://podcast.adobe.com/"},
-{cat:"AI音频工具",name:"iZotope RX",desc:"AI 音频修复王者，去噪、去混响、去齿音、去杂音效果最强",effort:"e2",platform:"Win/Mac",url:"https://www.izotope.com/en/products/rx.html"},
-{cat:"AI音频工具",name:"Auphonic",desc:"AI 音频后期智能处理，自动平衡响度和音色，播客必备",effort:"e1",platform:"Web",url:"https://auphonic.com/"},
-{cat:"AI音频工具",name:"Krisp",desc:"AI 实时降噪，录制和通话中去除背景噪音和回声",effort:"e1",platform:"Win/Mac",url:"https://krisp.ai/"},
-{cat:"AI音频工具",name:"AudioShake",desc:"AI 分离人声和乐器，分轨提取质量高，适合采样和混音",effort:"e1",platform:"Web",url:"https://www.audioshake.ai/"},
-
-// ─── 音频剪辑 ───
-{cat:"音频剪辑",name:"Adobe Audition",desc:"专业音频编辑软件，降噪修复混音效果器一应俱全，行业标准",effort:"e2",platform:"Win/Mac",url:"https://www.adobe.com/products/audition.html"},
-{cat:"音频剪辑",name:"Audacity",desc:"最流行的免费开源音频编辑软件，录音剪辑降噪导出全功能",effort:"e1",platform:"Win/Mac/Linux",url:"https://www.audacityteam.org/"},
-{cat:"音频剪辑",name:"Fairlight",desc:"集成在达芬奇中的专业音频编辑工具，最高支持 999 音轨，免费使用",effort:"e2",platform:"Win/Mac/Linux",url:"https://www.blackmagicdesign.com/products/davinciresolve"},
-{cat:"音频剪辑",name:"Logic Pro",desc:"Mac 平台专业音频工作站，音乐制作和音频编辑的行业标准",effort:"e3",platform:"Mac",url:"https://www.apple.com/logic-pro/"},
-];
-
-const categories = [...new Set(tools.map(t=>t.cat))];
+let tools = [];
 const effortMap = {e1:'🟢 打开即用',e2:'🟡 半小时上手',e3:'🔴 需要折腾'};
 
 function render(cat,keyword){
@@ -146,13 +96,19 @@ document.getElementById('totalCount').textContent=`${list.length} 款工具`;
 
 function filterTools(){const kw=document.getElementById('search').value;const active=document.querySelector('.tab.active');const cat=active?active.dataset.cat:'全部';render(cat,kw)}
 
+function switchTab(el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');filterTools()}
+
 function init(){
+fetch('tools.json').then(r=>r.json()).then(data=>{
+tools=data.tools;
+const categories=[...new Set(tools.map(t=>t.cat))];
 const tabs=document.getElementById('tabs');
 tabs.innerHTML=['全部',...categories].map(c=>`<button class="tab${c==='全部'?' active':''}" data-cat="${c}" onclick="switchTab(this)">${c}</button>`).join('');
 render('全部','');
+}).catch(()=>{
+document.getElementById('grid').innerHTML='<div class="empty">数据加载失败，请刷新重试</div>';
+});
 }
-
-function switchTab(el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');filterTools()}
 
 init();
 </script>
